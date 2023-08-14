@@ -1,0 +1,50 @@
+f###### Main loop ###### SNF-1M8
+
+dM/dt = phi*EBox_RL - M
+phi = FCRTR
+
+
+dP0/dt = M - P0
+dP1/dt = P0- P1
+dP2/dt = P1- P2
+dP3/dt = P2- P3
+dP4/dt = P3- P4
+dP5/dt = P4- P5
+
+# BPM degradation
+dP/dt = P5 - beta_max*Km*P/(Km+P)
+
+param beta_max=2.3074, Km=1.0152
+
+
+aux Ptot = P0+P1+P2+P3+P4+P5+P
+
+###### Optional auxiliary loops ######
+
+# SNF model
+At=At0*FCATR
+param Kd=1, At0=0.1, Ka=94.2234
+
+
+###### Synthesis rate laws for E-Box controlled genes: PER, REV, ROR ######
+
+A_free(P,A,Kd)=0.5*(A-P-Kd+sqrt(((A-P-Kd)^2)+4*Kd*A))
+
+
+# Rate Law 1
+EBox_RL = A_free(P,At,Kd)/(Ka+At)
+
+
+
+###### Fold change parameters ######
+
+# FCATR = "fold change in activator (BMAL) transcription"
+# FCRTR = "fold change in repressor (PER) transcription"
+param FCRTR=219.4494, FCATR=1
+
+###### Simulation setting ##########
+@ total=2000
+@ xplot=T, yplot=Ptot, xlo=800, xhi=1000, ylo=0, yhi=40
+
+
+done

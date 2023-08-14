@@ -1,0 +1,20 @@
+# Kim-Forger PNF Model
+
+dM/dt=FCRTR*f(Pn,A,Kd)-M
+dPc/dt=M-Pc
+dPn/dt=Pc-Pn
+
+dR/dt=f(Pn,A,Kd)-delta*R
+dA/dt=FCATR*gamma*R-delta*A
+
+f(P,A,Kd)=0.5*(1-P/A-Kd/A+sqrt(((1-P/A-Kd/A)^2)+4*Kd/A))
+
+A(0)=1.5
+
+param Kd=1e-5, delta=0.2, gamma=0.0395
+
+# FCATR = "fold change in activator (BMAL) transcription"
+# FCRTR = "fold change in repressor (PER) transcription"
+param FCRTR=1, FCATR=1
+
+done

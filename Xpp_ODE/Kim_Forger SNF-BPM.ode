@@ -1,0 +1,39 @@
+# Kim-Forger SNF-BPM Model with modified free BMAL function,
+# increased loop length, and Michaelis-Menten degradation of 
+# nuclear PER.
+
+dMn/dt=lambda*(FCRTR*f(Pn,At,Kd)/(f(Pn,At,Kd) + Ka)-Mn)
+dMc/dt=lambda*(Mn-Mc)
+dPc/dt=lambda*(Mc-Pc)
+dP1/dt=lambda*(Pc-P1)
+
+# Extra steps for a loop length of 8
+# instead of 6.
+# dM3/dt=lambda*(P1-M3)
+# dM4/dt=lambda*(M3-M4)
+
+dP2/dt=lambda*(P1-P2)
+dPn/dt=lambda*(P2-b3*Km*Pn/(Km+Pn))
+
+f(P,A,Kd)=0.5*(A-P-Kd+sqrt(((A-P-Kd)^2)+4*Kd*A))
+
+aux pT = Pc + ((Vn/Vc)*Pn)
+aux A_free = f(Pn,At,Kd)
+
+
+At=At0*FCATR
+
+# Use these parameters for a loop length of 8.
+#param Kd=0.1, lambda=6
+
+
+param Kd=0.05, lambda=4
+param Ka=0.01, At0=0.1, b3=60, Km=0.01
+param Vc=3, Vn=1
+
+# FCATR = "fold change in activator (BMAL) transcription"
+# FCRTR = "fold change in repressor (PER) transcription"
+param FCATR=1, FCRTR=1
+
+
+done

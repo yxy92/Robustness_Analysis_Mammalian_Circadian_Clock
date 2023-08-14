@@ -1,0 +1,45 @@
+# Kim-Forger NNF model with free BMAL modification, modified feedback,
+# and Michaelis-Menten degredation of nuclear PER (Pn)
+
+dMn/dt=lambda*(FCRTR*f(Pn,A,Kd)/(f(Pn,A,Kd) + Ka)-Mn)
+dMc/dt=lambda*(Mn-Mc)
+dPc/dt=lambda*(Mc-Pc)
+dP1/dt=lambda*(Pc-P1)
+
+# Use these for a loop length of 8 instead of 6.
+#dM3/dt=lambda*(P1-M3)
+#dM4/dt=lambda*(M3-M4)
+
+dP2/dt=lambda*(P1-P2)
+dPn/dt=lambda*(P2-b3*Km*Pn/(Km+Pn))
+
+# Scaling Kr away
+dA/dt=lambda*delta*(FCATR*Amax*1/(1 + (R^n)) - A)
+dR/dt=lambda*delta*(Rmax*f(Pn,A,Kd)/(f(Pn,A,Kd) + Ka) - R)
+
+#Scaling Rt away
+# dA/dt=lambda*delta*(FCATR*Amax*Kr/(Kr + R) - A)
+# dR/dt=lambda*delta*(f(Pn,A,Kd)/(f(Pn,A,Kd) + Ka) - R)
+
+f(P,A,Kd)=0.5*(A-P-Kd+sqrt(((A-P-Kd)^2)+4*Kd*A))
+
+aux pT = Pc + ((Vn/Vc)*Pn)
+aux A_free = f(Pn,A,Kd)
+
+
+# Use these parameters for a loop length of 8.
+#param Kd=0.1, lambda=6
+
+param Kd=0.05, lambda=4
+param Ka=0.01, b3=60, Km=0.01, Kr=0.01
+param delta=0.2, Rmax=1.5, Amax=0.1
+
+# Increase delta to get larger amplitude BMAL oscillations
+#param delta=13, Rt=0.2, Amax=0.15
+
+# FCATR = "fold change in activator (BMAL) transcription"
+# FCRTR = "fold change in repressor (PER) transcription"
+param FCRTR=1, FCATR=1, Vc=3, Vn=1, n=1
+
+
+done
